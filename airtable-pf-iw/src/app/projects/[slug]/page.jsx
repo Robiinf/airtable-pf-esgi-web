@@ -1,81 +1,118 @@
-// app/projects/[slug]/page.jsx
-import { fetchProjectBySlug } from "@/lib/projects";
+"use client";
+
+import { useState, useEffect } from "react";
+import { fetchProjectBySlug } from "@/lib/client-services";
+import { useParams } from "next/navigation";
 import LikeButton from "@/components/LikeButton";
 import Image from "next/image";
 
-export default async function ProjectPage({ params }) {
-  const project = await fetchProjectBySlug(params.slug);
-  console.log("Project data:", project);
-  if (!project)
-    return <div className="text-center text-red-500">Projet introuvable.</div>;
+export default function ProjectPage() {
+  const [project, setProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const params = useParams();
+  const { slug } = params;
+
+  useEffect(() => {
+    async function loadProject() {
+      try {
+        console.log("Récupération du projet avec le slug:", slug);
+        setIsLoading(true);
+        const projectData = await fetchProjectBySlug(slug);
+
+        if (!projectData) {
+          setError("Projet non trouvé");
+        } else {
+          console.log("Projet récupéré:", projectData);
+          setProject(projectData);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Erreur lors du chargement:", err);
+        setError("Impossible de charger ce projet");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (slug) {
+      loadProject();
+    }
+  }, [slug]);
+
+  if (isLoading) return <div className="p-6">Chargement...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
+  if (!project) return <div className="p-6">Projet non trouvé</div>;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4 space-y-8">
-      <h1 className="text-4xl font-bold text-center">{project.name}</h1>
+    <main className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2">{project.name}</h1>
+      <p className="text-gray-700 mb-6">{project.description}</p>
 
-      <p className="text-lg text-gray-700">{project.description}</p>
-
-      {/* Stacks */}
-      {project.stacks.length > 0 && (
-        <div>
+      {/* Afficher les stacks */}
+      {project.stacks && project.stacks.length > 0 && (
+        <div className="mb-6">
           <h2 className="text-xl font-semibold mb-2">Technologies utilisées</h2>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-2">
             {project.stacks.map((stack) => (
-              <div
+              <span
                 key={stack.id}
-                className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg"
+                className="bg-gray-100 rounded-full px-3 py-1 text-sm"
               >
+                {stack.name}
                 {stack.logo && (
                   <Image
                     src={stack.logo}
                     alt={stack.name}
-                    width={24}
-                    height={24}
-                    className="rounded"
+                    width={20}
+                    height={20}
+                    className="inline-block ml-1"
                   />
                 )}
-                <span className="text-sm">{stack.name}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Afficher les auteurs */}
+      {project.authors && project.authors.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Auteurs</h2>
+          <ul className="list-disc pl-5">
+            {project.authors.map((author) => (
+              <li key={author.id}>
+                {author.firstname} {author.lastname}{" "}
+                {author.class && `(${author.class})`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Afficher les assets/images */}
+      {project.assets && project.assets.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Images du projet</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {project.assets.map((asset, index) => (
+              <div key={index} className="overflow-hidden rounded-lg shadow-lg">
+                <img
+                  src={asset.url}
+                  alt={`${project.name} - image ${index + 1}`}
+                  className="w-full h-48 object-cover"
+                />
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Authors */}
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Équipe projet</h2>
-        <ul className="list-disc list-inside text-gray-800">
-          {project.authors.map((author) => (
-            <li key={author.id}>
-              {author.firstname} {author.lastname} ({author.class})
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Assets */}
-      {project.assets.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold mb-2">Visuels / Assets</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {project.assets.map((asset, i) => (
-              <Image
-                key={i}
-                src={asset.url}
-                alt={`Asset ${i + 1}`}
-                width={600}
-                height={400}
-                className="rounded-lg shadow-md"
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Likes */}
       <div className="mt-6">
-        <LikeButton projectId={project.id} initialLikes={project.likes} />
+        <a href="/" className="text-blue-500 hover:underline">
+          ← Retour à la liste des projets
+        </a>
       </div>
-    </div>
+    </main>
   );
 }
