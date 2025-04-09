@@ -7,6 +7,7 @@ function formatProject(record) {
     id: record.id,
     name: record.fields.Name,
     description: record.fields.Description,
+    likes: record.fields.Likes || 0,
     slug: record.fields.Slug,
     authors: record.fields.Authors || [],
     stacks: record.fields.Stacks || [],
