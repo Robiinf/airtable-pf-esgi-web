@@ -47,3 +47,26 @@ export async function fetchProjectBySlug(slug) {
     return null;
   }
 }
+
+export async function loginAdmin(email, password) {
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Échec de la connexion");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Erreur de connexion:", error);
+    throw error;
+  }
+}
