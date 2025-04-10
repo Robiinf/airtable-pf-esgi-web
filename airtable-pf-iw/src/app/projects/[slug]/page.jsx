@@ -109,6 +109,10 @@ export default function ProjectPage() {
       )}
 
       <div className="mt-6">
+        <LikeButton projectId={project.slug} initialLikes={project.likes} />
+      </div>
+
+      <div className="mt-6">
         <a href="/" className="text-blue-500 hover:underline">
           ← Retour à la liste des projets
         </a>
