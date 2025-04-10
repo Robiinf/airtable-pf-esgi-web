@@ -40,83 +40,95 @@ export default function ProjectPage() {
     }
   }, [slug]);
 
-  if (isLoading) return <div className="p-6">Chargement...</div>;
-  if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!project) return <div className="p-6">Projet non trouvé</div>;
-
   return (
     <main className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">{project.name}</h1>
-      <p className="text-gray-700 mb-6">{project.description}</p>
-
-      {/* Afficher les stacks */}
-      {project.stacks && project.stacks.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Technologies utilisées</h2>
-          <div className="flex flex-wrap gap-2">
-            {project.stacks.map((stack) => (
-              <span
-                key={stack.id}
-                className="bg-gray-100 rounded-full px-3 py-1 text-sm"
-              >
-                {stack.name}
-                {stack.logo && (
-                  <Image
-                    src={stack.logo}
-                    alt={stack.name}
-                    width={20}
-                    height={20}
-                    className="inline-block ml-1"
-                  />
-                )}
-              </span>
-            ))}
-          </div>
+      {isLoading ? (
+        <div className="text-center p-8">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-blue-600 mb-2"></div>
+          <p>Chargement du projet...</p>
         </div>
-      )}
+      ) : error ? (
+        <div className="p-6 text-red-500 text-center">{error}</div>
+      ) : (
+        <>
+          <h1 className="text-3xl font-bold mb-2">{project.name}</h1>
+          <p className="text-gray-700 mb-6">{project.description}</p>
 
-      {/* Afficher les auteurs */}
-      {project.authors && project.authors.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Auteurs</h2>
-          <ul className="list-disc pl-5">
-            {project.authors.map((author) => (
-              <li key={author.id}>
-                {author.firstname} {author.lastname}{" "}
-                {author.class && `(${author.class})`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Afficher les assets/images */}
-      {project.assets && project.assets.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Images du projet</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {project.assets.map((asset, index) => (
-              <div key={index} className="overflow-hidden rounded-lg shadow-lg">
-                <img
-                  src={asset.url}
-                  alt={`${project.name} - image ${index + 1}`}
-                  className="w-full h-48 object-cover"
-                />
+          {/* Afficher les stacks */}
+          {project.stacks && project.stacks.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">
+                Technologies utilisées
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {project.stacks.map((stack) => (
+                  <span
+                    key={stack.id}
+                    className="bg-gray-100 rounded-full px-3 py-1 text-sm"
+                  >
+                    {stack.name}
+                    {stack.logo && (
+                      <Image
+                        src={stack.logo}
+                        alt={stack.name}
+                        width={20}
+                        height={20}
+                        className="inline-block ml-1"
+                      />
+                    )}
+                  </span>
+                ))}
               </div>
-            ))}
+            </div>
+          )}
+
+          {/* Afficher les auteurs */}
+          {project.authors && project.authors.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Auteurs</h2>
+              <ul className="list-disc pl-5">
+                {project.authors.map((author) => (
+                  <li key={author.id}>
+                    {author.firstname} {author.lastname}{" "}
+                    {author.class && `(${author.class})`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Afficher les assets/images */}
+          {project.assets && project.assets.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Images du projet</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {project.assets.map((asset, index) => (
+                  <div
+                    key={index}
+                    className="overflow-hidden rounded-lg shadow-lg"
+                  >
+                    <img
+                      src={asset.url}
+                      alt={`${project.name} - image ${index + 1}`}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6">
+            <LikeButton projectId={project.slug} initialLikes={project.likes} />
           </div>
-        </div>
+
+          <div className="mt-6">
+            <a href="/" className="text-blue-500 hover:underline">
+              ← Retour à la liste des projets
+            </a>
+          </div>
+        </>
       )}
-
-      <div className="mt-6">
-        <LikeButton projectId={project.slug} initialLikes={project.likes} />
-      </div>
-
-      <div className="mt-6">
-        <a href="/" className="text-blue-500 hover:underline">
-          ← Retour à la liste des projets
-        </a>
-      </div>
     </main>
   );
 }
