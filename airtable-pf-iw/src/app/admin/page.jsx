@@ -6,13 +6,13 @@ import Link from "next/link";
 
 export default function AdminDashboard() {
   const router = useRouter();
-  
+
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/auth/logout", {
         method: "POST",
       });
-      
+
       if (response.ok) {
         router.push("/login");
         router.refresh();
@@ -33,7 +33,12 @@ export default function AdminDashboard() {
           Déconnexion
         </button>
       </div>
-      
+      <div className="mb-6">
+        <Link href="/" className="text-blue-500 hover:underline">
+          ← Retour à l'accueil
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Gestion des projets</h2>
@@ -47,7 +52,7 @@ export default function AdminDashboard() {
             Gérer les projets
           </Link>
         </div>
-        
+
         {/* Vous pouvez ajouter d'autres cartes pour différentes sections d'administration */}
       </div>
     </div>

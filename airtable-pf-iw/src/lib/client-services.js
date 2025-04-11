@@ -70,3 +70,18 @@ export async function loginAdmin(email, password) {
     throw error;
   }
 }
+
+export async function fetchAuth() {
+  try {
+    const response = await fetch("/api/me");
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la vérification de l'authentification");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    return { isAdmin: false };
+  }
+}
