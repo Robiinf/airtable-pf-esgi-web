@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { fetchPublishedProjects } from "@/lib/client-services";
-import { fetchAuth } from "@/lib/client-services";
+import { fetchPublishedProjects, fetchAuth } from "@/lib/client-services";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -19,7 +18,6 @@ export default function HomePage() {
         setProjects(projectsData);
         setError(null);
 
-        // Vérification de l'authentification
         const data = await fetchAuth();
         setIsAdmin(data.isAdmin);
       } catch (err) {
@@ -34,20 +32,23 @@ export default function HomePage() {
   }, [searchTerm]);
 
   return (
-    <main className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Portfolio ESGI - IW</h1>
+    <main className="min-h-screen bg-gray-50 text-gray-800 p-6 md:p-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+        <h1 className="text-4xl font-bold tracking-tight">
+          🎓 Portfolio ESGI IW
+        </h1>
+
         {isAdmin ? (
           <Link
             href="/admin"
-            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors duration-200"
+            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl shadow transition"
           >
-            → Backoffice
+            Backoffice
           </Link>
         ) : (
           <Link
             href="/login"
-            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center"
+            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl shadow transition"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,44 +66,61 @@ export default function HomePage() {
           </Link>
         )}
       </div>
-      <div className="mb-4">
+
+      <div className="w-full max-w-xl mx-auto mb-10">
         <input
           type="text"
-          placeholder="Rechercher un projet..."
+          placeholder="🔍 Rechercher un projet par mot-clé..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
       {isLoading ? (
-        <div className="text-center p-8">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-blue-600 mb-2"></div>
-          <p>Chargement des projets...</p>
+        <div className="flex justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-300 border-t-blue-500 mr-3"></div>
+          <p className="text-lg">Chargement des projets...</p>
         </div>
       ) : error ? (
-        <div className="p-6 text-red-500 text-center">{error}</div>
+        <div className="text-red-500 text-center">{error}</div>
+      ) : projects.length === 0 ? (
+        <p className="text-center text-gray-600">Aucun projet trouvé</p>
       ) : (
-        <>
-          {projects.length === 0 ? (
-            <p>Aucun projet trouvé</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {projects.map((project) => (
-                <a
-                  key={project.id}
-                  href={`/projects/${project.slug}`}
-                  className="border rounded-lg p-4 hover:shadow-lg transition"
-                >
-                  <h2 className="text-xl font-semibold">{project.name}</h2>
-                  <p className="text-sm text-gray-600 line-clamp-2 mt-1">
-                    {project.description}
-                  </p>
-                </a>
-              ))}
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project) => (
+            <a
+              key={project.id}
+              href={`/projects/${project.slug}`}
+              className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition duration-200 hover:-translate-y-1"
+            >
+              <div className="mb-4">
+                {project.assets && project.assets[0] ? (
+                  <img
+                    src={project.assets[0].url}
+                    alt={project.name}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-500">Aucune image</span>
+                  </div>
+                )}
+              </div>
+
+              <h2 className="text-xl font-semibold mb-2">{project.name}</h2>
+              <p className="text-gray-600 text-sm line-clamp-2">
+                {project.description}
+              </p>
+
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-sm text-gray-500">
+                  {project.likes} Likes
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
       )}
     </main>
   );

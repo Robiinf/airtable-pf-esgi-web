@@ -64,7 +64,7 @@ export default function ProjectPage() {
                 {project.stacks.map((stack) => (
                   <span
                     key={stack.id}
-                    className="bg-gray-100 rounded-full px-3 py-1 text-sm"
+                    className="bg-gray-100 rounded-full px-3 py-1 text-sm flex items-center"
                   >
                     {stack.name}
                     {stack.logo && (
@@ -97,11 +97,11 @@ export default function ProjectPage() {
             </div>
           )}
 
-          {/* Afficher les assets/images */}
+          {/* Afficher les images */}
           {project.assets && project.assets.length > 0 && (
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Images du projet</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {project.assets.map((asset, index) => (
                   <div
                     key={index}
@@ -118,12 +118,17 @@ export default function ProjectPage() {
             </div>
           )}
 
+          {/* Bouton Like */}
           <div className="mt-6">
             <LikeButton projectId={project.slug} initialLikes={project.likes} />
           </div>
 
+          {/* Lien retour */}
           <div className="mt-6">
-            <a href="/" className="text-blue-500 hover:underline">
+            <a
+              href="/"
+              className="text-blue-500 hover:underline flex items-center"
+            >
               ← Retour à la liste des projets
             </a>
           </div>
