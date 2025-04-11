@@ -9,13 +9,13 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function loadData() {
       try {
         setIsLoading(true);
-        const projectsData = await fetchPublishedProjects();
-        console.log("Projets récupérés:", projectsData);
+        const projectsData = await fetchPublishedProjects(searchTerm);
         setProjects(projectsData);
         setError(null);
 
@@ -31,7 +31,7 @@ export default function HomePage() {
     }
 
     loadData();
-  }, []);
+  }, [searchTerm]);
 
   return (
     <main className="p-6">
@@ -64,6 +64,15 @@ export default function HomePage() {
             Connexion
           </Link>
         )}
+      </div>
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Rechercher un projet..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
       </div>
 
       {isLoading ? (

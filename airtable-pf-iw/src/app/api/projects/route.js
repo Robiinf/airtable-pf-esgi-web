@@ -1,12 +1,26 @@
 import { airtableApi } from "@/lib/airtable";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get("filter")?.toLowerCase();
+
+  let filterByFormula = "Published = TRUE()";
+
+  if (search) {
+    const escapedSearch = search.replace(/"/g, '\\"');
+    filterByFormula = `AND(
+      Published = TRUE(),
+      OR(
+        FIND(LOWER("${escapedSearch}"), LOWER(Name)) > 0,
+        FIND(LOWER("${escapedSearch}"), LOWER(Description)) > 0
+      )
+    )`;
+  }
+
   try {
     const response = await airtableApi.get("/Projects", {
-      params: {
-        filterByFormula: "Published = TRUE()",
-      },
+      params: { filterByFormula },
     });
 
     const records = response.data.records.map((record) => ({

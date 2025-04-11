@@ -1,8 +1,10 @@
 // src/lib/client-services.js
 
-export async function fetchPublishedProjects() {
+export async function fetchPublishedProjects(searchTerm = "") {
   try {
-    const response = await fetch("/api/projects");
+    const query = searchTerm ? `?filter=${encodeURIComponent(searchTerm)}` : "";
+
+    const response = await fetch(`/api/projects${query}`);
 
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des projets");
