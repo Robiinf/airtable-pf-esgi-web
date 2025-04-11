@@ -157,3 +157,90 @@ export async function deleteStack(id) {
     throw error;
   }
 }
+
+export async function fetchStudents() {
+  try {
+    const response = await fetch("/api/students");
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des étudiants");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    return [];
+  }
+}
+
+export async function createStudent(studentData) {
+  try {
+    const response = await fetch("/api/students", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(studentData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la création de l'étudiant"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function updateStudent(studentData) {
+  try {
+    const response = await fetch(`/api/students`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(studentData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la mise à jour de l'étudiant"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function deleteStudent(id) {
+  try {
+    const response = await fetch(`/api/students`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la suppression de l'étudiant"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
