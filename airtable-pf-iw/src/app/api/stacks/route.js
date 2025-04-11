@@ -38,8 +38,6 @@ export async function POST(request) {
 export async function PUT(request) {
   const { id, Name, Logo } = await request.json();
 
-  console.error({ id, Name, Logo });
-
   try {
     const response = await airtableApi.patch(`/Stacks/${id}`, {
       fields: {

@@ -136,8 +136,12 @@ export async function updateStack(stackData) {
 
 export async function deleteStack(id) {
   try {
-    const response = await fetch(`/api/stacks/${id}`, {
+    const response = await fetch(`/api/stacks`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
     });
 
     if (!response.ok) {
