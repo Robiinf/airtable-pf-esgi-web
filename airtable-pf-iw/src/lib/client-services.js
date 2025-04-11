@@ -87,3 +87,69 @@ export async function fetchAuth() {
     return { isAdmin: false };
   }
 }
+
+export async function createStack(stackData) {
+  try {
+    const response = await fetch("/api/stacks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(stackData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Erreur lors de la création du stack");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function updateStack(stackData) {
+  try {
+    const response = await fetch(`/api/stacks`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(stackData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la mise à jour du stack"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function deleteStack(id) {
+  try {
+    const response = await fetch(`/api/stacks/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la suppression du stack"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}

@@ -43,13 +43,37 @@ export default function AdminDashboard() {
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Gestion des projets</h2>
           <p className="text-gray-600 mb-4">
-            Ajoutez, modifiez ou supprimez les projets du portfolio.
+            Ajoutez, modifiez ou supprimez les projets.
           </p>
           <Link
             href="/admin/projects"
             className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
           >
             Gérer les projets
+          </Link>
+        </div>
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Gestion des élèves</h2>
+          <p className="text-gray-600 mb-4">
+            Ajoutez, modifiez ou supprimez des élèves.
+          </p>
+          <Link
+            href="/admin/students"
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+          >
+            Gérer les élèves
+          </Link>
+        </div>
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Gestion des stacks</h2>
+          <p className="text-gray-600 mb-4">
+            Ajoutez, modifiez ou supprimez des stacks.
+          </p>
+          <Link
+            href="/admin/stacks"
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+          >
+            Gérer les stacks
           </Link>
         </div>
 

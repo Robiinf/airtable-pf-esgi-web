@@ -16,14 +16,12 @@ export default function ProjectPage() {
   useEffect(() => {
     async function loadProject() {
       try {
-        console.log("Récupération du projet avec le slug:", slug);
         setIsLoading(true);
         const projectData = await fetchProjectBySlug(slug);
 
         if (!projectData) {
           setError("Projet non trouvé");
         } else {
-          console.log("Projet récupéré:", projectData);
           setProject(projectData);
           setError(null);
         }
