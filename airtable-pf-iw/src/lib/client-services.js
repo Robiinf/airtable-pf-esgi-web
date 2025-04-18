@@ -244,3 +244,88 @@ export async function deleteStudent(id) {
     throw error;
   }
 }
+
+export async function fetchAllProjects() {
+  try {
+    const response = await fetch("/api/admin/projects");
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des projets");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    return [];
+  }
+}
+
+export async function createProject(projectData) {
+  try {
+    const response = await fetch("/api/admin/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Erreur lors de la création du projet");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function updateProject(projectData) {
+  try {
+    const response = await fetch(`/api/admin/projects`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la mise à jour du projet"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
+
+export async function deleteProject(id) {
+  try {
+    const response = await fetch(`/api/admin/projects`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la suppression du projet"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur:", error);
+    throw error;
+  }
+}
